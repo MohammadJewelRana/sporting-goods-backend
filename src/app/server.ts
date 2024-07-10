@@ -11,8 +11,9 @@ async function main() {
     await mongoose.connect(config.database_url as string);
 
     // seedSuperAdmin();
-    server = app.listen(config.port, () => {
-      console.log(`This app listening on port  ${config.port}`);
+    const port=config.port || 5001
+    server = app.listen(config.port || 5001, () => {
+      console.log(`This app listening on port  ${port}`);
     });
   } catch (err) {
     console.log(err);
@@ -20,8 +21,10 @@ async function main() {
 }
 main();
 
-//for Asynchronous code
+// for Asynchronous code
 process.on('unhandledRejection', (err) => {
+  console.log(err);
+  
   console.log('unhandledRejection is detected,shutting down...', err);
   if (server) {
     server.close(() => {
@@ -31,7 +34,9 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-process.on('uncaughtException', () => {
+process.on('uncaughtException', (err) => {
+  console.log(err);
+  
   console.log('unhandledException is detected,shutting down...');
   process.exit(1);
 });

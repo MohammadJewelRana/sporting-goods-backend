@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { PracticeRoute } from '../modules/practiseModule/practiseModule.route';
+ 
+import { UserRoutes } from '../modules/user/user.route';
  
 const router = Router();
 
 //all route in array of object
 const moduleRoutes = [
-  { path: '/', route: PracticeRoute },
+  { path: '/user', route: UserRoutes },
  
 ];
 

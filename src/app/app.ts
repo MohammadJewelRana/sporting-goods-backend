@@ -16,7 +16,7 @@ app.use(express.text());
 app.use(cookieParser());
 
 
-app.use('/', router); //get routes from router folder
+app.use('/api', router); //get routes from router folder
 
 // app.get('/', (req: Request, res: Response) => {
 //     res.json({
