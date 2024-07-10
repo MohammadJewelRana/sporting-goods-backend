@@ -1,5 +1,7 @@
 import express from 'express';
 import { ProductController,   } from './products.controller';
+import { ProductValidation } from './products.validation';
+import validateRequest from '../../middleware/validateRequest';
  
  
  
@@ -10,13 +12,13 @@ const router = express.Router();
 
 router.post(
   '/add-products',
-  // validateRequest(UserValidation.createUserValidationSchema),
+  validateRequest(ProductValidation.productSchema),
   ProductController.createProducts,
 );
 
 router.patch(
   '/:id',
-  // validateRequest(UserValidation.updateUserValidationSchema),
+  validateRequest(ProductValidation.updateProductSchema),
   ProductController.updateProduct,
 );
 
