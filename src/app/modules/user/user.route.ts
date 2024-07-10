@@ -13,7 +13,7 @@ router.post(
   UserControllers.createAdmin,
 );
 
-router.post(
+router.patch(
   '/:id',
   validateRequest(UserValidation.updateUserValidationSchema),
   UserControllers.updateUser,
