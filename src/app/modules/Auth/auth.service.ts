@@ -2,12 +2,13 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 /* eslint-disable no-undef */
 import httpStatus from 'http-status';
 import { AppError } from '../../errors/AppError';
-import { TUser } from './auth.interface';
-import { AuthUser } from './auth.model';
+ 
+ 
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
 import config from '../../config';
 import { User } from '../user/user.model';
+import { TUser } from '../user/user.interface';
 
 
 

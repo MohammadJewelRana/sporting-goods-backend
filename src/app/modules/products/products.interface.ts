@@ -1,6 +1,7 @@
 import {
   TCategory,
   TInventory,
+  TProductInfo,
   TRating,
   TReviews,
   TShippingDetail,
@@ -27,3 +28,25 @@ export type TProduct = {
 
   isDeleted: boolean;
 };
+
+ 
+ 
+
+export type TCart= {
+  userId: string;
+  name: string;
+  email: string;
+  contactNumber: string;
+  address: string;
+  district: string;
+  houseNumber?: string;
+  street?: string;
+  productInfo: TProductInfo[];
+  shippingCost: number;
+  totalCost: number;
+  totalItem: number;
+  totalQuantity: number;
+  vat: number;
+  isCompleted: boolean;
+}
+

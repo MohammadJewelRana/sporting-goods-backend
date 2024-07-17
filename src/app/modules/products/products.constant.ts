@@ -34,3 +34,14 @@ export type TShippingDetail = {
   };
   origin: string;
 };
+
+
+export type TProductInfo= {
+  productId: string;
+  name: string;
+  images: string[];
+  itemQuantity: number;
+  price: number;
+  total: number;
+ 
+}

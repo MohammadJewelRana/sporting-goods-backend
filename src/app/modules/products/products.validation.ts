@@ -130,7 +130,42 @@ const updateProductSchema = z.object({
   }),
 });
 
+const productInfoSchema = z.object({
+  productId: z.string(),
+  name: z.string(),
+  images: z.array(z.string()),
+  itemQuantity: z.number(),
+  price: z.number(),
+  total: z.number(),
+});
+
+const cartSchema = z.object({
+  body: z.object({
+    userId: z.string(),
+    name: z.string(),
+    email: z.string().email(),
+    contactNumber: z.string(),
+    address: z.string(),
+    district: z.string(),
+    houseNumber: z.string().optional(),
+    street: z.string().optional(),
+    productInfo: z.array(productInfoSchema),
+    shippingCost: z.number(),
+    totalCost: z.number(),
+    totalItem: z.number(),
+    totalQuantity: z.number(),
+    vat: z.number(),
+    isCompleted: z.boolean().default(false),
+
+
+  }),
+});
+
+
+
+
 export const ProductValidation = {
   productSchema,
   updateProductSchema,
+  cartSchema
 };

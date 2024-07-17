@@ -2,9 +2,10 @@ import httpStatus from 'http-status';
 import QueryBuilder from '../../builders/QueryBuilder';
 import { AppError } from '../../errors/AppError';
 
-import { TProduct } from './products.interface';
-import { Product } from './products.model';
-import { unknown } from 'zod';
+import { TCart, TProduct } from './products.interface';
+import { Cart, Product } from './products.model';
+import { User } from '../user/user.model';
+import mongoose from 'mongoose';
 
 const createProductsIntoDB = async (payload: TProduct) => {
   // console.log(payload);
@@ -80,7 +81,8 @@ const updateProductIntoDB = async (
 
 const deleteSingleProduct = async (productId: string) => {
   const result = await Product.findByIdAndDelete({ _id: productId });
-  return result;
+  // return result;
+  return null;
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {
@@ -103,10 +105,56 @@ const getSingleProductsFromDB = async (productId: string) => {
   return result;
 };
 
+const createCartIntoDB = async (cartData: TCart) => {
+  // console.log(cartData);
+  const { userId, productInfo } = cartData;
+  // console.log(productInfo);
+
+  const user = await User.findOne({ _id: userId });
+  // console.log(user);
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User not found!!');
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const result = await Cart.create(cartData);
+    if (!result) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'failed to add into the cart');
+    }
+
+    for (const element of productInfo) {
+      const deductQuantity = await Product.findOneAndUpdate(
+        { _id: element?.productId },
+        { $inc: { 'inventory.quantity': -element.itemQuantity } },
+        { new: true, session },
+      );
+
+      if (!deductQuantity) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Failed to update product inventory',
+        );
+      }
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+    return result;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(' failed to  add cart');
+  }
+};
+
 export const ProductServices = {
   createProductsIntoDB,
   getAllProductsFromDB,
   getSingleProductsFromDB,
   deleteSingleProduct,
   updateProductIntoDB,
+  createCartIntoDB,
 };

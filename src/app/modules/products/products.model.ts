@@ -2,13 +2,14 @@ import { Schema, model } from 'mongoose';
 import {
   TCategory,
   TInventory,
+  TProductInfo,
   TRating,
   TReviews,
   TShippingDetail,
   TSpecification,
   TWarranty,
 } from './products.constant';
-import { TProduct } from './products.interface';
+import { TCart, TProduct } from './products.interface';
 
 const categorySchema = new Schema<TCategory>({
   id: { type: String, required: true, unique: true },
@@ -72,6 +73,50 @@ const productSchema = new Schema<TProduct>({
 
   isDeleted: { type: Boolean, default: false },
 
-});
+},
+{
+  timestamps: true,
+},
+);
+
+
+const productInfoSchema = new Schema<TProductInfo>({
+  productId: { type: String, required: true },
+  name: { type: String, required: true },
+  images: { type: [String], required: true },
+  itemQuantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+  total: { type: Number, required: true }
+
+})
+
+const cartSchema = new Schema<TCart>({
+  userId: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  contactNumber: { type: String, required: true },
+  address: { type: String, required: true },
+  district: { type: String, required: true },
+  houseNumber: { type: String, default: '' },
+  street: { type: String, default: '' },
+  productInfo: { type: [productInfoSchema], required: true },
+  shippingCost: { type: Number, required: true },
+  totalCost: { type: Number, required: true },
+  totalItem: { type: Number, required: true },
+  totalQuantity: { type: Number, required: true },
+  vat: { type: Number, required: true },
+  isCompleted: { type: Boolean, default: false },
+
+},
+{
+  timestamps: true,
+}
+);
+ 
+
+
+
+
 
 export const Product = model<TProduct>('Product', productSchema);
+export const Cart = model<TCart>('Cart', cartSchema);
