@@ -6,12 +6,51 @@ import { TCart, TProduct } from './products.interface';
 import { Cart, Product } from './products.model';
 import { User } from '../user/user.model';
 import mongoose from 'mongoose';
+import { ProductSearchableFields } from './products.constant';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createProductsIntoDB = async (payload: TProduct) => {
+const createProductsIntoDB = async (files: any[],payload: TProduct) => {
   // console.log(payload);
+  if (!payload && !files) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'please give the data and image files');
+  }
+  // console.log('service',files);
+  
+  // const categoryObject= JSON.parse(payload?.category);
+  // const specificationsObject= JSON.parse(payload?.specifications);
+  // const inventoryObject= JSON.parse(payload?.inventory);
+  // const shippingDetailsObject= JSON.parse(payload?.shippingDetails);
+  // const warrantyObject= JSON.parse(payload?.warranty);
+ 
+  // console.log(category);
+  // console.log(typeof category);
+  payload.shippingDetails= JSON.parse(payload?.shippingDetails);
+  payload.category= JSON.parse(payload?.category);
+  payload.specifications= JSON.parse(payload?.specifications);
+  payload.inventory= JSON.parse(payload?.inventory);
+  payload.warranty=JSON.parse(payload?.warranty);
+  // console.log(payload);
+  
+
+  
+// let imageUrls=[];
+  if (files && files.length > 0) {
+    const imageUrls = [];
+    for (const file of files) {
+      const imageName = `${payload.name}-${Date.now()}`;
+      const path = file.path;
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      imageUrls.push(secure_url);
+    }
+    payload.images = imageUrls; // Assuming images is an array in the schema
+  } else {
+    payload.images = [];
+  }
+  
 
   const result = await Product.create(payload);
   return result;
+
 };
 
 const updateProductIntoDB = async (
@@ -86,8 +125,11 @@ const deleteSingleProduct = async (productId: string) => {
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {
+
+  console.log(query);
+  
   const productQuery = new QueryBuilder(Product.find(), query)
-    // .search(FacultySearchableFields)
+    .search(ProductSearchableFields)
     .filter()
     .sort()
     .paginate()

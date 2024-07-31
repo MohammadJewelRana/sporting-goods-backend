@@ -26,6 +26,9 @@ class QueryBuilder<T> {
     return this;
   }
 
+ 
+
+ 
   //filtering
   filter() {
     const queryObj = { ...this.query }; //copy the query

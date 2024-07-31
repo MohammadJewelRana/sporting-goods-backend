@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const categorySchema = z.object({
-  id: z.string(),
+  
   name: z.string(),
   description: z.string(),
 });
@@ -28,7 +28,7 @@ const shippingDetailSchema = z.object({
     width: z.number().default(0),
     height: z.number().default(0),
   }),
-  origin: z.string().optional(),
+ 
 });
 
 const reviewSchema = z.object({
@@ -51,15 +51,15 @@ const productSchema = z.object({
     price: z.number(),
     discountPrice: z.number().optional(),
     brand: z.string(),
-    sku: z.string(),
+    sku: z.string().optional(),
     inventory: inventorySchema,
-    images: z.array(z.string()),
-    ratings: ratingSchema,
+    // images: z.array(z.string()),
+    ratings: ratingSchema.optional(),
     specifications: z.array(specificationSchema),
-    warranty: warrantySchema,
+    warranty: warrantySchema.optional(),
     shippingDetails: shippingDetailSchema,
     tags: z.array(z.string()),
-    reviews: z.array(reviewSchema),
+    reviews: z.array(reviewSchema).optional(),
     isDeleted: z.boolean().default(false),
   }),
 });

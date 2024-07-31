@@ -4,10 +4,34 @@ import sendResponse from '../../utils/sendResponse';
 import { catchAsync } from '../../utils/catchAsync';
 import { ProductServices } from './products.service';
 
-const createProducts = catchAsync(async (req, res) => {
-  //   const { password, admin: adminData } = req.body;
+// const createProducts = catchAsync(async (req, res) => {
+//   //   const { password, admin: adminData } = req.body;
 
-  const result = await ProductServices.createProductsIntoDB(req.body);
+//   const result = await ProductServices.createProductsIntoDB(req.files,req.body);
+//   console.log(req.files);
+//   // console.log(req.body);
+  
+
+//   // const result = await ProductServices.createProductsIntoDB(req.body);
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Product is added successfully',
+//     data: result,
+//   });
+// });
+
+
+const createProducts = catchAsync(async (req, res) => {
+
+
+  // console.log('Controller - Files:', req.files);
+  // console.log('Controller - Body:', req.body);
+
+  const result = await ProductServices.createProductsIntoDB(req.files,req.body);
+ 
+  
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -16,6 +40,9 @@ const createProducts = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+ 
+
 
 const updateProduct= catchAsync(async (req, res) => {
  const {id}=req.params;

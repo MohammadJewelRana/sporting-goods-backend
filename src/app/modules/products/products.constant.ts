@@ -1,5 +1,5 @@
 export type TCategory = {
-  id: string;
+
   name: string;
   description: string;
 };
@@ -32,7 +32,7 @@ export type TShippingDetail = {
     width: number;
     height: number;
   };
-  origin: string;
+  
 };
 
 
@@ -45,3 +45,9 @@ export type TProductInfo= {
   total: number;
  
 }
+
+
+export const ProductSearchableFields = [
+  'name',
+  
+];

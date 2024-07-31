@@ -12,7 +12,6 @@ import {
 import { TCart, TProduct } from './products.interface';
 
 const categorySchema = new Schema<TCategory>({
-  id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
 });
@@ -39,7 +38,7 @@ const shippingDetailSchema = new Schema<TShippingDetail>({
     width: { type: Number,  default:0 },
     height: { type: Number,  default:0 },
   },
-  origin: { type: String,   },
+ 
 });
 
 const reviewSchema = new Schema<TReviews>({
@@ -60,16 +59,16 @@ const productSchema = new Schema<TProduct>({
   price: { type: Number, required: true },
   discountPrice: { type: Number },
   brand: { type: String, required: true },
-  sku: { type: String, required: true, unique: true },
+  sku: { type: String,   unique: true },
   inventory: { type: inventorySchema, required: true },
   images: { type: [String], required: true },
-  ratings: { type: ratingSchema, required: true },
+  ratings: { type: ratingSchema,   },
   specifications: { type: [specificationSchema], required: true },
   warranty: { type: warrantySchema, required: true },
   shippingDetails: { type: shippingDetailSchema, required: true },
   tags: { type: [String], required: true },
 
-  reviews: { type: [reviewSchema], required: true },
+  reviews: { type: [reviewSchema] },
 
   isDeleted: { type: Boolean, default: false },
 

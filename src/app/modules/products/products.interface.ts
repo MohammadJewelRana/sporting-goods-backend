@@ -18,13 +18,13 @@ export type TProduct = {
   brand: string;
   sku?: string;
   inventory: TInventory;
-  images: string[];
+  images?: string[];
   ratings?: TRating;
   specifications: TSpecification[];
   warranty?:TWarranty   ;
   shippingDetails: TShippingDetail;
   tags: string[];
-  reviews: TReviews[];
+  reviews?: TReviews[];
 
   isDeleted: boolean;
 };
