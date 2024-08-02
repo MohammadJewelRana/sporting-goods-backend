@@ -10,7 +10,6 @@ import { ProductServices } from './products.service';
 //   const result = await ProductServices.createProductsIntoDB(req.files,req.body);
 //   console.log(req.files);
 //   // console.log(req.body);
-  
 
 //   // const result = await ProductServices.createProductsIntoDB(req.body);
 
@@ -22,16 +21,14 @@ import { ProductServices } from './products.service';
 //   });
 // });
 
-
 const createProducts = catchAsync(async (req, res) => {
-
-
   // console.log('Controller - Files:', req.files);
   // console.log('Controller - Body:', req.body);
 
-  const result = await ProductServices.createProductsIntoDB(req.files,req.body);
- 
-  
+  const result = await ProductServices.createProductsIntoDB(
+    req.files,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -41,13 +38,12 @@ const createProducts = catchAsync(async (req, res) => {
   });
 });
 
- 
+const updateProduct = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  console.log(id,req.body);
+  
 
-
-const updateProduct= catchAsync(async (req, res) => {
- const {id}=req.params;
-
-  const result = await ProductServices.updateProductIntoDB(id,req.body);
+  const result = await ProductServices.updateProductIntoDB(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -57,8 +53,8 @@ const updateProduct= catchAsync(async (req, res) => {
   });
 });
 
-const deleteProduct= catchAsync(async (req, res) => {
-  const {  id } = req.params;
+const deleteProduct = catchAsync(async (req, res) => {
+  const { id } = req.params;
 
   const result = await ProductServices.deleteSingleProduct(id);
 
@@ -109,12 +105,11 @@ const createCart = catchAsync(async (req, res) => {
   });
 });
 
-
 export const ProductController = {
   createProducts,
   getAllProducts,
   getSingleProduct,
   deleteProduct,
   updateProduct,
-  createCart
+  createCart,
 };

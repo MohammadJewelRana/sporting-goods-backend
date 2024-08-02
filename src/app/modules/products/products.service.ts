@@ -9,31 +9,23 @@ import mongoose from 'mongoose';
 import { ProductSearchableFields } from './products.constant';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createProductsIntoDB = async (files: any[],payload: TProduct) => {
+const createProductsIntoDB = async (files: any[], payload: TProduct) => {
   // console.log(payload);
   if (!payload && !files) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'please give the data and image files');
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'please give the data and image files',
+    );
   }
-  // console.log('service',files);
-  
-  // const categoryObject= JSON.parse(payload?.category);
-  // const specificationsObject= JSON.parse(payload?.specifications);
-  // const inventoryObject= JSON.parse(payload?.inventory);
-  // const shippingDetailsObject= JSON.parse(payload?.shippingDetails);
-  // const warrantyObject= JSON.parse(payload?.warranty);
- 
-  // console.log(category);
-  // console.log(typeof category);
-  payload.shippingDetails= JSON.parse(payload?.shippingDetails);
-  payload.category= JSON.parse(payload?.category);
-  payload.specifications= JSON.parse(payload?.specifications);
-  payload.inventory= JSON.parse(payload?.inventory);
-  payload.warranty=JSON.parse(payload?.warranty);
-  // console.log(payload);
-  
 
-  
-// let imageUrls=[];
+  payload.shippingDetails = JSON.parse(payload?.shippingDetails);
+  payload.category = JSON.parse(payload?.category);
+  payload.specifications = JSON.parse(payload?.specifications);
+  payload.inventory = JSON.parse(payload?.inventory);
+  payload.warranty = JSON.parse(payload?.warranty);
+  // console.log(payload);
+
+  // let imageUrls=[];
   if (files && files.length > 0) {
     const imageUrls = [];
     for (const file of files) {
@@ -46,11 +38,9 @@ const createProductsIntoDB = async (files: any[],payload: TProduct) => {
   } else {
     payload.images = [];
   }
-  
 
   const result = await Product.create(payload);
   return result;
-
 };
 
 const updateProductIntoDB = async (
@@ -62,25 +52,23 @@ const updateProductIntoDB = async (
     throw new AppError(httpStatus.BAD_REQUEST, 'Product not found!!');
   }
 
+  // console.log(findProduct);
+  console.log(payload);
+  
+
   const {
     category,
     inventory,
-    images,
-    ratings,
     specifications,
-    warranty,
-    shippingDetails,
     tags,
     reviews,
     ...remainingData
   } = payload;
 
-  const { dimensions } = shippingDetails;
-  // const { category, inventory,images,ratings,specifications,warranty,shippingDetails,tags,reviews,...remainingProductData } = payload;
 
   const modifiedData: Record<string, unknown> = { ...remainingData };
 
-  //modify object
+   //modify object
   if (category && Object.keys(category).length) {
     for (const [key, value] of Object.entries(category)) {
       modifiedData[`category.${key}`] = value;
@@ -93,16 +81,20 @@ const updateProductIntoDB = async (
     }
   }
 
-  if (ratings && Object.keys(ratings).length) {
-    for (const [key, value] of Object.entries(ratings)) {
-      modifiedData[`ratings.${key}`] = value;
-    }
+  if (specifications && Array.isArray(specifications)) {
+    specifications.forEach((specification, index) => {
+      for (const [key, value] of Object.entries(specification)) {
+        modifiedData[`specifications.${index}.${key}`] = value;
+      }
+    });
   }
-  if (warranty && Object.keys(warranty).length) {
-    for (const [key, value] of Object.entries(warranty)) {
-      modifiedData[`warranty.${key}`] = value;
-    }
+
+  if (tags && Array.isArray(tags)) {
+    modifiedData['tags'] = tags; // Directly assign the tags array
   }
+
+ 
+
 
   const result = await Product.findByIdAndUpdate(
     { _id: productId },
@@ -125,9 +117,8 @@ const deleteSingleProduct = async (productId: string) => {
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {
-
   console.log(query);
-  
+
   const productQuery = new QueryBuilder(Product.find(), query)
     .search(ProductSearchableFields)
     .filter()
