@@ -61,7 +61,7 @@ const productSchema = new Schema<TProduct>({
   brand: { type: String, required: true },
   sku: { type: String,   unique: true },
   inventory: { type: inventorySchema, required: true },
-  images: { type: [String], required: true },
+  images: { type: [String] ,required:true},
   ratings: { type: ratingSchema,   },
   specifications: { type: [specificationSchema], required: true },
   warranty: { type: warrantySchema, required: true },

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import QueryBuilder from '../../builders/QueryBuilder';
 import { AppError } from '../../errors/AppError';
@@ -7,68 +8,48 @@ import { Cart, Product } from './products.model';
 import { User } from '../user/user.model';
 import mongoose from 'mongoose';
 import { ProductSearchableFields } from './products.constant';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+ 
 
-const createProductsIntoDB = async (files: any[], payload: TProduct) => {
+const createProductsIntoDB = async (payload: TProduct) => {
   // console.log(payload);
-  if (!payload && !files) {
+  if (!payload) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       'please give the data and image files',
     );
   }
 
-  payload.shippingDetails = JSON.parse(payload?.shippingDetails);
-  payload.category = JSON.parse(payload?.category);
-  payload.specifications = JSON.parse(payload?.specifications);
-  payload.inventory = JSON.parse(payload?.inventory);
-  payload.warranty = JSON.parse(payload?.warranty);
-  // console.log(payload);
-
-  // let imageUrls=[];
-  if (files && files.length > 0) {
-    const imageUrls = [];
-    for (const file of files) {
-      const imageName = `${payload.name}-${Date.now()}`;
-      const path = file.path;
-      const { secure_url } = await sendImageToCloudinary(imageName, path);
-      imageUrls.push(secure_url);
-    }
-    payload.images = imageUrls; // Assuming images is an array in the schema
-  } else {
-    payload.images = [];
-  }
-
   const result = await Product.create(payload);
   return result;
+  // return null;
 };
 
 const updateProductIntoDB = async (
   productId: string,
   payload: Partial<TProduct>,
 ) => {
+  // console.log(payload);
+
   const findProduct = await Product.findById({ _id: productId });
   if (!findProduct) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Product not found!!');
   }
 
   // console.log(findProduct);
-  console.log(payload);
-  
+  // console.log(payload);
 
   const {
     category,
     inventory,
     specifications,
-    tags,
+    // tags,
     reviews,
     ...remainingData
   } = payload;
 
-
   const modifiedData: Record<string, unknown> = { ...remainingData };
 
-   //modify object
+  //modify object
   if (category && Object.keys(category).length) {
     for (const [key, value] of Object.entries(category)) {
       modifiedData[`category.${key}`] = value;
@@ -81,20 +62,21 @@ const updateProductIntoDB = async (
     }
   }
 
+  // if (specifications && Array.isArray(specifications)) {
+  //   specifications.forEach((specification, index) => {
+  //     for (const [key, value] of Object.entries(specification)) {
+  //       modifiedData[`specifications.${index}.${key}`] = value;
+  //     }
+  //   });
+  // }
   if (specifications && Array.isArray(specifications)) {
-    specifications.forEach((specification, index) => {
-      for (const [key, value] of Object.entries(specification)) {
-        modifiedData[`specifications.${index}.${key}`] = value;
-      }
-    });
+    // Replace the entire specifications array
+    modifiedData['specifications'] = specifications;
   }
 
-  if (tags && Array.isArray(tags)) {
-    modifiedData['tags'] = tags; // Directly assign the tags array
-  }
-
- 
-
+  // if (tags && Array.isArray(tags)) {
+  //   modifiedData['tags'] = tags; // Directly assign the tags array
+  // }
 
   const result = await Product.findByIdAndUpdate(
     { _id: productId },
@@ -112,8 +94,8 @@ const updateProductIntoDB = async (
 
 const deleteSingleProduct = async (productId: string) => {
   const result = await Product.findByIdAndDelete({ _id: productId });
-  // return result;
-  return null;
+  return result;
+  // return null;
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {

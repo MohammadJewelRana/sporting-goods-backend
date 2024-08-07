@@ -53,7 +53,7 @@ const productSchema = z.object({
     brand: z.string(),
     sku: z.string().optional(),
     inventory: inventorySchema,
-    // images: z.array(z.string()),
+    images: z.array(z.string()),
     ratings: ratingSchema.optional(),
     specifications: z.array(specificationSchema),
     warranty: warrantySchema.optional(),

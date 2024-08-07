@@ -49,15 +49,16 @@ const userSchema = new Schema<TUser>(
         values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
         message: '{VALUE} is not a valid blood group',
       },
+      default:null
     },
     presentAddress: {
       type: String,
       required: [true, 'Present address is required'],
     },
 
-    profileImg: { type: String },
+    profileImg: { type: String ,default:null},
 
-    role: { type: String, enum: USER_ROLE },
+    role: { type: String, enum: USER_ROLE,default:USER_ROLE.admin },
     status: { type: String, enum: UserStatus, default: 'in-progress' },
     isDeleted: { type: Boolean, default: false },
   },

@@ -4,29 +4,13 @@ import sendResponse from '../../utils/sendResponse';
 import { catchAsync } from '../../utils/catchAsync';
 import { ProductServices } from './products.service';
 
-// const createProducts = catchAsync(async (req, res) => {
-//   //   const { password, admin: adminData } = req.body;
-
-//   const result = await ProductServices.createProductsIntoDB(req.files,req.body);
-//   console.log(req.files);
-//   // console.log(req.body);
-
-//   // const result = await ProductServices.createProductsIntoDB(req.body);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Product is added successfully',
-//     data: result,
-//   });
-// });
-
+ 
 const createProducts = catchAsync(async (req, res) => {
   // console.log('Controller - Files:', req.files);
-  // console.log('Controller - Body:', req.body);
+  console.log('Controller - Body:', req.body);
 
   const result = await ProductServices.createProductsIntoDB(
-    req.files,
+    // req.files,
     req.body,
   );
 
@@ -38,9 +22,14 @@ const createProducts = catchAsync(async (req, res) => {
   });
 });
 
+
+
+
 const updateProduct = catchAsync(async (req, res) => {
   const { id } = req.params;
   console.log(id,req.body);
+
+  
   
 
   const result = await ProductServices.updateProductIntoDB(id, req.body);

@@ -7,6 +7,8 @@ import { UserServices } from './user.service';
 const createAdmin = catchAsync(async (req, res) => {
   //   const { password, admin: adminData } = req.body;
 
+  console.log(req.body);
+  
   const result = await UserServices.createAdminIntoDB(req.body);
 
   sendResponse(res, {
