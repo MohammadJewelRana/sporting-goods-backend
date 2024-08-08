@@ -105,12 +105,12 @@ const getAllProductsFromDB = async (query: Record<string, unknown>) => {
     .search(ProductSearchableFields)
     .filter()
     .sort()
-    .paginate()
+    // .paginate()
     .fields();
   const result = await productQuery.modelQuery;
   const meta = await productQuery.countTotal();
   return {
-    meta,
+    // meta,
     result,
   };
 };
